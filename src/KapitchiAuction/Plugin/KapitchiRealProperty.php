@@ -1,5 +1,12 @@
 <?php
-namespace KapitchiAuction\Plugin;
+/**
+ * Kapitchi Zend Framework 2 Modules (http://kapitchi.com/)
+ *
+ * @copyright Copyright (c) 2012-2013 Kapitchi Open Source Team (http://kapitchi.com/open-source-team)
+ * @license   http://opensource.org/licenses/LGPL-3.0 LGPL 3.0
+ */
+
+namespace KapAuction\Plugin;
 
 use Zend\EventManager\EventInterface,
     KapitchiApp\PluginManager\PluginInterface;
@@ -8,7 +15,7 @@ use Zend\EventManager\EventInterface,
  *
  * @author Matus Zeman <mz@kapitchi.com>
  */
-class KapitchiRealProperty implements PluginInterface
+class KapRealProperty implements PluginInterface
 {
     
     public function getAuthor()
@@ -23,7 +30,7 @@ class KapitchiRealProperty implements PluginInterface
 
     public function getName()
     {
-        return '[KapitchiAuction] RealProperty item type';
+        return '[KapAuction] RealProperty item type';
     }
 
     public function getVersion()
@@ -38,7 +45,7 @@ class KapitchiRealProperty implements PluginInterface
         $sharedEm = $em->getSharedManager();
         
         //adds type to the form
-        $sharedEm->attach('KapitchiAuction\Form\Item', 'init', function($e) {
+        $sharedEm->attach('KapAuction\Form\Item', 'init', function($e) {
             $form = $e->getTarget();
             $typeHandle = $form->get('typeHandle');
             $valueOptions = $typeHandle->getValueOptions();
@@ -49,10 +56,10 @@ class KapitchiRealProperty implements PluginInterface
             $typeHandle->setValueOptions($valueOptions);
         });
         
-        $sharedEm->attach('KapitchiAuction\Form\Item', 'init', function($e) use ($sm) {
+        $sharedEm->attach('KapAuction\Form\Item', 'init', function($e) use ($sm) {
             $input = $e->getTarget();
             
-            $propertyForm = $sm->get('KapitchiRealProperty\Form\Property');
+            $propertyForm = $sm->get('KapRealProperty\Form\Property');
             $propertyForm->remove('title');
             $propertyForm->remove('description');
             
@@ -61,15 +68,15 @@ class KapitchiRealProperty implements PluginInterface
             ));
         });
         
-        $sharedEm->attach('KapitchiAuction\Form\ItemInputFilter', 'init', function($e) use ($sm) {
+        $sharedEm->attach('KapAuction\Form\ItemInputFilter', 'init', function($e) use ($sm) {
             $input = $e->getTarget();
-            $inputFilter = $sm->get('KapitchiRealProperty\Form\PropertyInputFilter');
+            $inputFilter = $sm->get('KapRealProperty\Form\PropertyInputFilter');
             $inputFilter->remove('title');
             $inputFilter->remove('description');
             $input->add($inputFilter, 'realproperty');
         });
         
-        $sharedEm->attach('KapitchiAuction\Form\ItemInputFilter', 'isValid.pre', function($e) use ($sm) {
+        $sharedEm->attach('KapAuction\Form\ItemInputFilter', 'isValid.pre', function($e) use ($sm) {
             $ins = $e->getTarget();
             if($ins->getRawValue('typeHandle') != 'realproperty') {
                 $group = $ins->getValidationGroup();
@@ -80,14 +87,14 @@ class KapitchiRealProperty implements PluginInterface
             }
         });
         
-        $sharedEm->attach('KapitchiAuction\Service\Item', 'persist', function($e) use ($sm) {
+        $sharedEm->attach('KapAuction\Service\Item', 'persist', function($e) use ($sm) {
             $data = $e->getParam('data');
             $entity = $e->getParam('entity');
             
             if(isset($data['realproperty'])) {
-                //$e->setParam('realproperty', $sm->get('KapitchiAuction\Service\RealPropertyItem'));
-                $propertyItemService = $sm->get('KapitchiAuction\Service\RealPropertyItem');
-                $propertyService = $sm->get('KapitchiRealProperty\Service\Property');
+                //$e->setParam('realproperty', $sm->get('KapAuction\Service\RealPropertyItem'));
+                $propertyItemService = $sm->get('KapAuction\Service\RealPropertyItem');
+                $propertyService = $sm->get('KapRealProperty\Service\Property');
                 $property = $propertyService->createEntityFromArray($data['realproperty']);
                 
                 //copy items title/desc to address
@@ -110,16 +117,16 @@ class KapitchiRealProperty implements PluginInterface
             }
         });
         
-        $sharedEm->attach('KapitchiAuction\Controller\ItemController', 'update.load', function($e) use ($sm) {
+        $sharedEm->attach('KapAuction\Controller\ItemController', 'update.load', function($e) use ($sm) {
             $entity = $e->getParam('entity');
             $form = $e->getParam('form');
             
-            $propertyItemService = $sm->get('KapitchiAuction\Service\RealPropertyItem');
+            $propertyItemService = $sm->get('KapAuction\Service\RealPropertyItem');
             $item = $propertyItemService->findOneBy(array(
                 'itemId' => $entity->getId()
             ));
             if($item) {
-                $propertyService = $sm->get('KapitchiRealProperty\Service\Property');
+                $propertyService = $sm->get('KapRealProperty\Service\Property');
                 $property = $propertyService->find($item->getPropertyId());
                 $arr = $propertyService->createArrayFromEntity($property);
                 $form->get('realproperty')->setData($arr);

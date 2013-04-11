@@ -1,21 +1,21 @@
 <?php
 return array(
-    'KapitchiAuction' => array(
+    'KapAuction' => array(
         'auction_options' => array(
             //'active' => 
         )
     ),
     'plugin_manager' => array(
         'invokables' => array(
-            'Auction/AuctionRevision' => 'KapitchiAuction\Plugin\AuctionRevision',
-            'Auction/RoundRevision' => 'KapitchiAuction\Plugin\RoundRevision',
-            'Auction/KapitchiLog/AuctionLog' => 'KapitchiAuction\Plugin\KapitchiLog\AuctionLog',
-            'Auction/KapitchiRealProperty' => 'KapitchiAuction\Plugin\KapitchiRealProperty',
+            'Auction/AuctionRevision' => 'KapAuction\Plugin\AuctionRevision',
+            'Auction/RoundRevision' => 'KapAuction\Plugin\RoundRevision',
+            'Auction/KapitchiLog/AuctionLog' => 'KapAuction\Plugin\KapitchiLog\AuctionLog',
+            'Auction/KapRealProperty' => 'KapAuction\Plugin\KapRealProperty',
         ),
     ),
     'controllers' => array(
         'invokables' => array(
-            'KapitchiAuction\Controller\Index' => 'KapitchiAuction\Controller\IndexController',
+            'KapAuction\Controller\Index' => 'KapAuction\Controller\IndexController',
         ),
     ),
     'view_manager' => array(
@@ -33,7 +33,7 @@ return array(
                 'options' => array(
                     'route'    => '/auction',
                     'defaults' => array(
-                        '__NAMESPACE__' => 'KapitchiAuction\Controller',
+                        '__NAMESPACE__' => 'KapAuction\Controller',
                         'controller'    => 'Index',
                         'action'        => 'index',
                     ),

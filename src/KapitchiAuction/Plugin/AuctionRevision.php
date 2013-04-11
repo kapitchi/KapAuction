@@ -1,5 +1,12 @@
 <?php
-namespace KapitchiAuction\Plugin;
+/**
+ * Kapitchi Zend Framework 2 Modules (http://kapitchi.com/)
+ *
+ * @copyright Copyright (c) 2012-2013 Kapitchi Open Source Team (http://kapitchi.com/open-source-team)
+ * @license   http://opensource.org/licenses/LGPL-3.0 LGPL 3.0
+ */
+
+namespace KapAuction\Plugin;
 
 use Zend\EventManager\EventInterface,
     KapitchiApp\PluginManager\AbstractPlugin;
@@ -23,7 +30,7 @@ class AuctionRevision extends AbstractPlugin
 
     public function getName()
     {
-        return '[KapitchiAuction] Revision enabler for Auction';
+        return '[KapAuction] Revision enabler for Auction';
     }
 
     public function getVersion()
@@ -36,8 +43,8 @@ class AuctionRevision extends AbstractPlugin
         $em = $e->getApplication()->getEventManager();
         $sm = $e->getApplication()->getServiceManager();
         
-        $em->getSharedManager()->attach('KapitchiAuction\Service\Auction', 'persist', function($e) use ($sm) {
-            $revService = $sm->get('KapitchiAuction\Service\AuctionRevision');
+        $em->getSharedManager()->attach('KapAuction\Service\Auction', 'persist', function($e) use ($sm) {
+            $revService = $sm->get('KapAuction\Service\AuctionRevision');
             $revision = $revService->createEntityRevision($e->getParam('entity'));
             
             $data = $e->getParam('data', false);
@@ -46,15 +53,15 @@ class AuctionRevision extends AbstractPlugin
                 $revService->persist($revision);
             }
         }, 0);
-        $em->getSharedManager()->attach('KapitchiAuction\Form\Auction', 'init', function($e) use ($sm) {
+        $em->getSharedManager()->attach('KapAuction\Form\Auction', 'init', function($e) use ($sm) {
             $form = $e->getTarget();
             $form->add($sm->get('KapitchiEntity\Form\Revision'));
         });
-        $em->getSharedManager()->attach('KapitchiAuction\Form\AuctionInputFilter', 'init', function($e) use ($sm) {
+        $em->getSharedManager()->attach('KapAuction\Form\AuctionInputFilter', 'init', function($e) use ($sm) {
             $if = $sm->get('KapitchiEntity\Entity\RevisionInputFilter');
             $e->getTarget()->add($if, 'revision');
         });
-        $em->getSharedManager()->attach('KapitchiAuction\Controller\AuctionController', 'update.post', function($e) use ($sm) {
+        $em->getSharedManager()->attach('KapAuction\Controller\AuctionController', 'update.post', function($e) use ($sm) {
             $form = $e->getParam('form');
             $viewModel = $e->getParam('viewModel');
             
@@ -78,6 +85,6 @@ class AuctionRevision extends AbstractPlugin
     public function getAuctionRevisionService()
     {
         $sm = $this->getServiceLocator();
-        return $sm->getServiceLocator()->get('KapitchiAuction\Service\AuctionRevision');
+        return $sm->getServiceLocator()->get('KapAuction\Service\AuctionRevision');
     }
 }

@@ -1,5 +1,12 @@
 <?php
-namespace KapitchiAuction\Plugin;
+/**
+ * Kapitchi Zend Framework 2 Modules (http://kapitchi.com/)
+ *
+ * @copyright Copyright (c) 2012-2013 Kapitchi Open Source Team (http://kapitchi.com/open-source-team)
+ * @license   http://opensource.org/licenses/LGPL-3.0 LGPL 3.0
+ */
+
+namespace KapAuction\Plugin;
 
 use Zend\EventManager\EventInterface,
     KapitchiApp\PluginManager\PluginInterface;
@@ -23,7 +30,7 @@ class RoundRevision implements PluginInterface
 
     public function getName()
     {
-        return '[KapitchiAuction] Revision enabler for Round';
+        return '[KapAuction] Revision enabler for Round';
     }
 
     public function getVersion()
@@ -36,8 +43,8 @@ class RoundRevision implements PluginInterface
         $em = $e->getApplication()->getEventManager();
         $sm = $e->getApplication()->getServiceManager();
         
-        $em->getSharedManager()->attach('KapitchiAuction\Service\Round', 'persist', function($e) use ($sm) {
-            $revService = $sm->get('KapitchiAuction\Service\RoundRevision');
+        $em->getSharedManager()->attach('KapAuction\Service\Round', 'persist', function($e) use ($sm) {
+            $revService = $sm->get('KapAuction\Service\RoundRevision');
             $revision = $revService->createEntityRevision($e->getParam('entity'));
             
             $data = $e->getParam('data', false);
@@ -46,15 +53,15 @@ class RoundRevision implements PluginInterface
                 $revService->persist($revision);
             }
         }, 0);
-        $em->getSharedManager()->attach('KapitchiAuction\Form\Round', 'init', function($e) use ($sm) {
+        $em->getSharedManager()->attach('KapAuction\Form\Round', 'init', function($e) use ($sm) {
             $form = $e->getTarget();
             $form->add($sm->get('KapitchiEntity\Form\Revision'));
         });
-        $em->getSharedManager()->attach('KapitchiAuction\Form\RoundInputFilter', 'init', function($e) use ($sm) {
+        $em->getSharedManager()->attach('KapAuction\Form\RoundInputFilter', 'init', function($e) use ($sm) {
             $if = $sm->get('KapitchiEntity\Entity\RevisionInputFilter');
             $e->getTarget()->add($if, 'revision');
         });
-        $em->getSharedManager()->attach('KapitchiAuction\Controller\RoundController', 'update.post', function($e) use ($sm) {
+        $em->getSharedManager()->attach('KapAuction\Controller\RoundController', 'update.post', function($e) use ($sm) {
             $form = $e->getParam('form');
             $model = $e->getParam('model');
             $viewModel = $e->getParam('viewModel');
@@ -63,7 +70,7 @@ class RoundRevision implements PluginInterface
             $log = $form->get('revision')->get('revisionLog');
             $log->setValue('');
             
-            $service = $sm->get('KapitchiAuction\Service\RoundRevision');
+            $service = $sm->get('KapAuction\Service\RoundRevision');
             $paginator = $service->getPaginator(array(
                 'revisionEntityId' => $model->getEntity()->getId()
             ), array (
