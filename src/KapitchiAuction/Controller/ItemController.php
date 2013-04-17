@@ -8,22 +8,8 @@
 
 namespace KapAuction\Controller;
 
-class ItemController extends \KapitchiEntity\Controller\AbstractEntityController
+class ItemController extends \KapitchiEntity\Controller\EntityContoller
 {
-    public function getIndexUrl()
-    {
-        return $this->url()->fromRoute('auction/item', array(
-            'action' => 'index'
-        ));
-    }
-
-    public function getUpdateUrl($entity)
-    {
-        return $this->url()->fromRoute('auction/item', array(
-            'action' => 'update', 'id' => $entity->getId()
-        ));
-    }
-    
     public function attachDefaultListeners()
     {
         parent::attachDefaultListeners();

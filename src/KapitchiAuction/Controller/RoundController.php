@@ -8,22 +8,8 @@
 
 namespace KapAuction\Controller;
 
-class RoundController extends \KapitchiEntity\Controller\AbstractEntityController
+class RoundController extends \KapitchiEntity\Controller\EntityContoller
 {
-    public function getIndexUrl()
-    {
-        return $this->url()->fromRoute('auction/round', array(
-            'action' => 'index'
-        ));
-    }
-
-    public function getUpdateUrl($entity)
-    {
-        return $this->url()->fromRoute('auction/round', array(
-            'action' => 'update', 'id' => $entity->getId()
-        ));
-    }
-    
     protected function attachDefaultListeners()
     {
         parent::attachDefaultListeners();

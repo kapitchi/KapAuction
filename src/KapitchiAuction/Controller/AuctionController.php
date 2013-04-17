@@ -8,22 +8,8 @@
 
 namespace KapAuction\Controller;
 
-use KapitchiEntity\Controller\AbstractEntityController;
+use KapitchiEntity\Controller\EntityContoller;
 
-class AuctionController extends AbstractEntityController
+class AuctionController extends EntityContoller
 {
-    public function getIndexUrl()
-    {
-        return $this->url()->fromRoute('auction/auction', array(
-            'action' => 'index'
-        ));
-    }
-
-    public function getUpdateUrl($entity)
-    {
-        return $this->url()->fromRoute('auction/auction', array(
-            'action' => 'update', 'id' => $entity->getId()
-        ));
-    }
-    
 }
